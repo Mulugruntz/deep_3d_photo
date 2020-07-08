@@ -127,3 +127,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# generated files
+models/
+mesh/
+depth/
+custom-conf.yml
+*.mp4
+
+# PyCharm
+.idea/
+
+# build/dist
+Deep3DPhotoApp

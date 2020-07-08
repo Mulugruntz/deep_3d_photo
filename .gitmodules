@@ -1,0 +1,3 @@
+[submodule "3d-photo-inpainting"]
+	path = 3d-photo-inpainting
+	url = https://github.com/Mulugruntz/3d-photo-inpainting.git

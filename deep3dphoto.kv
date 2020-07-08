@@ -1,0 +1,94 @@
+# kivy 2.0
+<FileChoose>:
+
+<StartButton>:
+
+<AutoScrollView>:
+
+<ComplexProgressBar>:
+    orientation: 'lr-tb'
+
+<Deep3DPhotoWidget>
+    GridLayout:
+        cols: 2
+        size_hint: (None, None)
+        width: self.parent.width
+        height: self.parent.height
+        padding: 5, 5, 5, 5
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            Image:
+                id: image_client
+                size_hint: [1, 1]
+                source: 'blank-transparent.png'
+                allow_stretch: True
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                ComplexProgressBar:
+                    id: pb_total
+                    Label:
+                        internal_name: 'Total'
+                        text: 'Total'
+                        color: .2,.2,.2,1
+                        size_hint: [.35, 1]
+                    ProgressBar:
+                        value: 0
+                        max: 100
+                        size_hint: [.65, 1]
+
+                ComplexProgressBar:
+                    id: pb_current
+                    Label:
+                        internal_name: 'Current'
+                        text: 'Current'
+                        color: .2,.2,.2,1
+                        size_hint: [.35, 1]
+                    ProgressBar:
+                        value: 0
+                        max: 100
+                        size_hint: [.65, 1]
+
+                StackLayout:
+                    orientation: 'lr-tb'
+                    TextInput:
+                        id: input_load
+                        multiline: False
+                        text: ''
+                        hint_text: 'selected path'
+                        size_hint: [.65, None]
+                        on_text_validate: image_client.source = self.text
+                    FileChoose:
+                        id: btn_load
+                        text: 'Load'
+                        on_release: self.choose()
+                        size_hint: [.35, None]
+
+                StartButton:
+                    id: btn_start
+                    on_release: self.run()
+                    text: 'Start'
+        BoxLayout:
+            orientation: 'vertical'
+
+            Image:
+                id: image_depth
+                size_hint: [1, 1]
+                source: 'blank-transparent.png'
+                allow_stretch: True
+
+            AutoScrollView:
+                id: scrlv
+                do_scroll_x: False
+
+                TextInput:
+                    id: logs
+                    background_color: 0,0,0,0
+                    multiline: True
+                    size_hint: [1, None]
+                    disabled: True
+#                    text: '\n'.join(['lorem ipsum ' * 50] * 5)
+                    height: max(self.minimum_height, scrlv.height)

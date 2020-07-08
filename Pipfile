@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+torch = "==1.5.1"
+torchvision = "==0.6.1"
+vispy = "==0.6.4"
+moviepy = "==1.0.3"
+transforms3d = "==0.3.1"
+networkx = "==2.4"
+scipy = "==1.5.0"
+pyyaml = "==5.3.1"
+matplotlib = "==3.2.2"
+scikit-image = "==0.17.2"
+pyqt5 = "==5.15.0"
+opencv-python-headless = "==4.2.0.34"
+kivy = {path = "./vendors/Kivy-2.0.0rc2-cp38-cp38-macosx_10_13_x86_64.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"}
+plyer = {editable = true,git = "https://github.com/kivy/plyer.git",ref = "f12b2f58acd498f7aa523c57c46ddb115810a72f"}
+cython = "==0.29.20"
+pyobjus = {editable = true,git = "https://github.com/kivy/pyobjus.git",ref = "672ed61"}
+pyinstaller = "==3.6"
+
+[requires]
+python_version = "3.8"
