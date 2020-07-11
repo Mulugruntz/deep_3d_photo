@@ -1,4 +1,7 @@
+from __future__ import annotations
+import shutil
 from datetime import datetime
+from functools import partial
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -8,12 +11,14 @@ import os
 import vispy
 from imageio.core import Array
 from kivy.clock import Clock
-from kivy.uix.image import Image
 from tqdm import tqdm
 import yaml
 
 from constants import CONFIG_ORIGIN, CONFIG_CUSTOM, MODELS_DIR, MODELS
 from injector import inject_write_videofile
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from kv_classes import FileChoose
 from kv_classes.complex_progress_bar import ComplexProgressBar
 from mesh import write_ply, read_ply, output_3d_photo
 from utilities import schedule_interval, check_models_existence
@@ -36,9 +41,11 @@ def init_fs(config):
 
 
 def wrap_3d_pi_with_override(image_filename: Path, *,
-                             depth_image: Optional[Image] = None,
+                             depth_handler: Optional[FileChoose] = None,
                              bar_total: Optional[ComplexProgressBar] = None,
-                             bar_current: Optional[ComplexProgressBar] = None):
+                             bar_current: Optional[ComplexProgressBar] = None,
+                             just_depth: bool = False,
+                             ):
     # with the GUI we always have exactly 1 input image file
     number_input_image = 1
     bar_total.reset()
@@ -68,25 +75,49 @@ def wrap_3d_pi_with_override(image_filename: Path, *,
     with open(CONFIG_CUSTOM, 'w') as config_file:
         yaml.dump(config, config_file, default_flow_style=None)
 
-    inject_write_videofile(
-        num_videos=len(config['video_postfix']) * number_input_image,
-        total_allocated_percent=20/100,
-        bar_total=bar_total,
-        bar_current=bar_current,
-    )
+    if not just_depth:
+        from_file = Path(depth_handler.bnd_image.source).resolve()
+        to_file = Path(config['depth_folder'], from_file.parts[-1].rsplit('.', maxsplit=1)[0] + '.png')
+
+        if from_file.samefile(to_file):
+            print(f'Depth file {from_file} is already in the correct location. No copy needed.')
+        else:
+            print(f'Copying Depth file from {from_file} to {to_file}')
+            shutil.copy(str(from_file), str(to_file))
+            Clock.schedule_once(
+                partial(update_image_handler,
+                        image_handler=depth_handler,
+                        path=to_file,
+                        )
+            )
+
+        inject_write_videofile(
+            num_videos=len(config['video_postfix']) * number_input_image,
+            total_allocated_percent=20 / 100,
+            bar_total=bar_total,
+            bar_current=bar_current,
+        )
 
     if not missing_models:
         bar_current.add(bar_current.max)
         bar_total.add(bar_total.max * 2 / 100)
-        wrap_3d_photo_inpainting(CONFIG_CUSTOM, depth_image=depth_image, bar_total=bar_total, bar_current=bar_current)
+        wrap_3d_photo_inpainting(
+            CONFIG_CUSTOM,
+            depth_handler=depth_handler,
+            bar_total=bar_total,
+            bar_current=bar_current,
+            just_depth=just_depth
+        )
     else:
         raise ValueError("Models have not been downloaded!")
 
 
 def wrap_3d_photo_inpainting(config_path, *,
-                             depth_image: Optional[Image] = None,
+                             depth_handler: Optional[FileChoose] = None,
                              bar_total: Optional[ComplexProgressBar] = None,
-                             bar_current: Optional[ComplexProgressBar] = None):
+                             bar_current: Optional[ComplexProgressBar] = None,
+                             just_depth: bool = False
+                             ):
     bar_current.reset()
     config = yaml.load(open(config_path, 'r'))
     if config['offscreen_rendering'] is True:
@@ -114,14 +145,23 @@ def wrap_3d_photo_inpainting(config_path, *,
         image = imageio.imread(sample['ref_img_fi'])
 
         print(f"Running depth extraction at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")
-        if config['require_midas'] is True:
+        if just_depth or config['require_midas'] is True:
             run_depth([sample['ref_img_fi']], config['src_folder'], config['depth_folder'],
                       config['MiDaS_model_ckpt'], MonoDepthNet, MiDaS_utils, target_w=640)
 
-        def f(dt):
-            depth_image.source = f"{config['depth_folder']}/{sample['src_pair_name']}.png"
+            Clock.schedule_once(
+                partial(update_image_handler,
+                        image_handler=depth_handler,
+                        path=Path(f"{config['depth_folder']}/{sample['src_pair_name']}.png"),
+                        )
+            )
 
-        Clock.schedule_once(f)
+        if just_depth:
+            bar_total.reset()
+            bar_total.value = bar_total.max
+            bar_current.reset()
+            bar_current.value = bar_current.max
+            return
 
         bar_current.add(bar_current.max)
         bar_total.add(bar_total.max * (2 / len(sample_list)) / 100)
@@ -200,6 +240,12 @@ def wrap_3d_photo_inpainting(config_path, *,
 
         bar_current.value_normalized = 1
         bar_total.value_normalized = 1
+
+
+def update_image_handler(dt, *, image_handler: FileChoose, path: Path):
+    path = path.resolve()
+    image_handler.bnd_image.set_source(path)
+    image_handler.bnd_text_input.text = str(path)
 
 
 def prepare_config_and_image(config: Dict, sample: Dict, image: Array) -> Array:

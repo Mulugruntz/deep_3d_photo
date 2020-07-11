@@ -1,5 +1,8 @@
 # kivy 2.0
+#:import Path pathlib.Path
 <FileChoose>:
+
+<ValidatedImage>:
 
 <StartButton>:
 
@@ -19,10 +22,12 @@
         BoxLayout:
             orientation: 'vertical'
 
-            Image:
+            ValidatedImage:
                 id: image_client
+                allowed_ext: ['jpg']
+                default_image: 'blank-transparent.png'
                 size_hint: [1, 1]
-                source: 'blank-transparent.png'
+                source: self.default_image
                 allow_stretch: True
 
             BoxLayout:
@@ -58,12 +63,33 @@
                         id: input_load
                         multiline: False
                         text: ''
-                        hint_text: 'selected path'
+                        hint_text: 'selected image path'
                         size_hint: [.65, None]
-                        on_text_validate: image_client.source = self.text
+                        on_text_validate: image_client.set_source(Path(self.text))
                     FileChoose:
-                        id: btn_load
-                        text: 'Load'
+                        id: btn_image_load
+                        bnd_text_input: input_load
+                        bnd_image: image_client
+                        filetype: {"title": "Pick a JPG file...", "filters": [("Image file (jpg)", "*.jpg")]}
+                        text: 'Load image'
+                        on_release: self.choose()
+                        size_hint: [.35, None]
+
+                StackLayout:
+                    orientation: 'lr-tb'
+                    TextInput:
+                        id: depth_load
+                        multiline: False
+                        text: ''
+                        hint_text: 'selected depth path'
+                        size_hint: [.65, None]
+                        on_text_validate: image_depth.set_source(Path(self.text))
+                    FileChoose:
+                        id: btn_depth_load
+                        bnd_text_input: depth_load
+                        bnd_image: image_depth
+                        filetype: {"title": "Pick a PNG file...", "filters": [("Image file (png)", "*.png")]}
+                        text: 'Load depth'
                         on_release: self.choose()
                         size_hint: [.35, None]
 
@@ -74,10 +100,12 @@
         BoxLayout:
             orientation: 'vertical'
 
-            Image:
+            ValidatedImage:
                 id: image_depth
+                allowed_ext: ['png']
+                default_image: 'blank-transparent.png'
                 size_hint: [1, 1]
-                source: 'blank-transparent.png'
+                source: self.default_image
                 allow_stretch: True
 
             AutoScrollView:

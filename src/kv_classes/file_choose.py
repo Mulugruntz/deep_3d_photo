@@ -1,8 +1,7 @@
 import os.path
 from pathlib import Path
 
-from kivy.app import App
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, ObjectProperty, DictProperty
 from kivy.uix.button import Button
 from plyer import filechooser
 
@@ -14,20 +13,25 @@ class FileChoose(Button):
     '''
 
     selection = ListProperty([])
+    filetype = DictProperty({"title": "Pick a file...", "filters": []})
+    bnd_text_input = ObjectProperty(None)
+    bnd_image = ObjectProperty(None)
 
     def choose(self):
         '''
         Call plyer filechooser API to run a filechooser Activity.
         '''
-        path = Path(App.get_running_app().root.ids.input_load.text)
+        path = Path(self.bnd_text_input.text)
         is_valid_path = Path(path := os.path.dirname(path)).exists() and bool(path)
-        filechooser.open_file(
+        properties = dict(
             on_selection=self.handle_selection,
             title="Pick a JPG file..",
             multiple=False,
             path=path if is_valid_path else os.path.expanduser("~"),
             filters=[("Image file (jpg)", "*.jpg")]
         )
+        properties.update(self.filetype)
+        filechooser.open_file(**properties)
 
     def handle_selection(self, selection):
         '''
@@ -40,6 +44,5 @@ class FileChoose(Button):
         Update TextInput.text after FileChoose.selection is changed
         via FileChoose.handle_selection.
         '''
-        App.get_running_app().root.ids.input_load.text = str(self.selection[0])
-        App.get_running_app().root.ids.image_client.source = str(self.selection[0])
-        App.get_running_app().root.ids.image_depth.source = str('blank-transparent.png')
+        self.bnd_text_input.text = str(self.selection[0])
+        self.bnd_image.set_source(Path(str(self.selection[0])))

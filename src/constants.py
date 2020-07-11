@@ -12,3 +12,4 @@ MODELS = {
     'rgb_feat_model_ckpt': 'color-model.pth',
     'MiDaS_model_ckpt': 'model.pt',
 }
+BLANK_IMAGE = CURRENT_DIR / 'blank-transparent.png'

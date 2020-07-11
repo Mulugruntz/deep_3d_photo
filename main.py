@@ -44,6 +44,7 @@ class KivyTextOut:
 
     def _new_write(self, txt):
         self.callback(self.sep + txt)
+        self.terminal.write(txt)
 
     def write(self, txt):
         if self.dynamic_init():
@@ -101,9 +102,17 @@ class Deep3DPhotoApp(App):
 
     def on_start(self, **kwargs):
         missing_models = check_models_existence()
+        btn_start = self.root.ids.btn_start
         if missing_models:
-            self.root.ids.btn_start.missing_models = missing_models
-            self.root.ids.btn_start.text = START_DOWNLOAD
+            btn_start.missing_models = missing_models
+            btn_start.text = START_DOWNLOAD
+
+        btn_start.image_handler = self.root.ids.btn_image_load
+        btn_start.depth_handler = self.root.ids.btn_depth_load
+        btn_start.bar_total = self.root.ids.pb_total
+        btn_start.bar_current = self.root.ids.pb_current
+
+        btn_start.revalidate()
 
 
 def main():
