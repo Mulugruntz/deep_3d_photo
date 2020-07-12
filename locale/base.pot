@@ -1,0 +1,215 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-12 19:50+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/kv_classes/complex_progress_bar.py:53
+#, python-brace-format
+msgid "The {self.__class__} has no {type_} child!"
+msgstr ""
+
+#: src/kv_classes/file_choose.py:17
+msgid "Pick a file..."
+msgstr ""
+
+#: src/kv_classes/file_choose.py:29
+msgid "Pick a JPG file.."
+msgstr ""
+
+#: src/kv_classes/file_choose.py:32 deep3dphoto.kv:74
+msgid "Image file (jpg)"
+msgstr ""
+
+#: src/kv_classes/start_button.py:22
+msgid "Download models (required first time)"
+msgstr ""
+
+#: src/kv_classes/start_button.py:23
+msgid "Downloading models..."
+msgstr ""
+
+#: src/kv_classes/start_button.py:24 deep3dphoto.kv:100
+msgid "Start"
+msgstr ""
+
+#: src/kv_classes/start_button.py:25
+msgid "Working, please wait..."
+msgstr ""
+
+#: src/kv_classes/start_button.py:26
+msgid "Generate Depth file"
+msgstr ""
+
+#: src/kv_classes/start_button.py:27
+msgid "Generating Depth file..."
+msgstr ""
+
+#: src/kv_classes/start_button.py:59
+msgid "Will generate the depth..."
+msgstr ""
+
+#: src/kv_classes/start_button.py:73 src/kv_classes/start_button.py:95
+msgid "Done working: failure!"
+msgstr ""
+
+#: src/kv_classes/start_button.py:75 src/kv_classes/start_button.py:97
+msgid "Done working: success!"
+msgstr ""
+
+#: src/kv_classes/start_button.py:81
+msgid "Will start working..."
+msgstr ""
+
+#: src/kv_classes/start_button.py:102
+msgid "Will start downloading the models..."
+msgstr ""
+
+#: src/kv_classes/start_button.py:115
+msgid "Model download: Done (failure)."
+msgstr ""
+
+#: src/kv_classes/start_button.py:117
+msgid "Model download: Done (success)."
+msgstr ""
+
+#: src/utilities.py:40
+#, python-brace-format
+msgid "Unknown model {model}!"
+msgstr ""
+
+#: src/utilities.py:121
+#, python-brace-format
+msgid ""
+"File {MODELS[name]} is incorrect (remote: {remote_size} != local: "
+"{local_size}). Will re-download."
+msgstr ""
+
+#: src/utilities.py:124
+msgid ""
+"The following models are missing: {\", \".join(MODELS[m] for m in missing)}! "
+"Please download them first."
+msgstr ""
+
+#: src/utilities.py:125
+msgid "You can find them there:"
+msgstr ""
+
+#: src/utilities.py:127
+#, python-brace-format
+msgid "Please put them in {MODELS_DIR}"
+msgstr ""
+
+#: wrapper.py:57
+#, python-brace-format
+msgid "File {real_image_filename} does not exist!"
+msgstr ""
+
+#: wrapper.py:85
+#, python-brace-format
+msgid ""
+"Depth file {from_file} is already in the correct location. No copy needed."
+msgstr ""
+
+#: wrapper.py:87
+#, python-brace-format
+msgid "Copying Depth file from {from_file} to {to_file}"
+msgstr ""
+
+#: wrapper.py:114
+msgid "Models have not been downloaded!"
+msgstr ""
+
+#: wrapper.py:139
+#, python-brace-format
+msgid "running on device {device}"
+msgstr ""
+
+#: wrapper.py:145
+msgid "Current Source ==> {sample['src_pair_name']}"
+msgstr ""
+
+#: wrapper.py:149
+msgid "Running depth extraction at {datetime.now():%Y-%m-%d %H:%M:%S.%f}"
+msgstr ""
+
+#: wrapper.py:194
+msgid "Start Running 3D_Photo ..."
+msgstr ""
+
+#: wrapper.py:211
+msgid ""
+"Writing depth ply (and basically doing everything) at {datetime.now():%Y-%m-"
+"%d %H:%M:%S.%f}"
+msgstr ""
+
+#: wrapper.py:271
+msgid "Loading edge model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}"
+msgstr ""
+
+#: wrapper.py:279
+msgid "Loading depth model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}"
+msgstr ""
+
+#: wrapper.py:289
+msgid "Loading rgb model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}"
+msgstr ""
+
+#: wrapper.py:304
+msgid "Making video at {datetime.now():%Y-%m-%d %H:%M:%S.%f}"
+msgstr ""
+
+#: wrapper.py:321
+msgid ""
+"{len(sample['video_postfix'])} videos done in {Path(config['video_folder'])."
+"resolve()}"
+msgstr ""
+
+#: deep3dphoto.kv:40 deep3dphoto.kv:41
+msgid "Total"
+msgstr ""
+
+#: deep3dphoto.kv:52 deep3dphoto.kv:53
+msgid "Current"
+msgstr ""
+
+#: deep3dphoto.kv:67
+msgid "selected image path"
+msgstr ""
+
+#: deep3dphoto.kv:74
+msgid "Pick a JPG file..."
+msgstr ""
+
+#: deep3dphoto.kv:75
+msgid "Load image"
+msgstr ""
+
+#: deep3dphoto.kv:85
+msgid "selected depth path"
+msgstr ""
+
+#: deep3dphoto.kv:92
+msgid "Pick a PNG file..."
+msgstr ""
+
+#: deep3dphoto.kv:92
+msgid "Image file (png)"
+msgstr ""
+
+#: deep3dphoto.kv:93
+msgid "Load depth"
+msgstr ""
