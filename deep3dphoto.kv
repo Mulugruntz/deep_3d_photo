@@ -1,6 +1,8 @@
 # kivy 2.0
 #:import Path pathlib.Path
 #:import _ kv_classes.localization._
+<BoxMarginLayout>:
+
 <FileChoose>:
 
 <ValidatedImage>:
@@ -58,46 +60,54 @@
                         max: 100
                         size_hint: [.65, 1]
 
-                StackLayout:
-                    orientation: 'lr-tb'
+                BoxMarginLayout:
+                    orientation: 'horizontal'
                     TextInput:
                         id: input_load
+                        margin: 5
                         multiline: False
                         text: ''
                         hint_text: _('selected image path')
-                        size_hint: [.65, None]
+                        size_hint: [.65, 1]
                         on_text_validate: image_client.set_source(Path(self.text))
                     FileChoose:
                         id: btn_image_load
+                        margin: 5
                         bnd_text_input: input_load
                         bnd_image: image_client
                         filetype: {"title": _("Pick a JPG file..."), "filters": [(_("Image file (jpg)"), "*.jpg")]}
                         text: _('Load image')
                         on_release: self.choose()
-                        size_hint: [.35, None]
+                        size_hint: [.35, 1]
 
-                StackLayout:
-                    orientation: 'lr-tb'
+                BoxMarginLayout:
+                    orientation: 'horizontal'
                     TextInput:
                         id: depth_load
+                        margin: 5
                         multiline: False
                         text: ''
                         hint_text: _('selected depth path')
-                        size_hint: [.65, None]
+                        size_hint: [.65, 1]
                         on_text_validate: image_depth.set_source(Path(self.text))
                     FileChoose:
                         id: btn_depth_load
+                        margin: 5
                         bnd_text_input: depth_load
                         bnd_image: image_depth
                         filetype: {"title": _("Pick a PNG file..."), "filters": [(_("Image file (png)"), "*.png")]}
                         text: _('Load depth')
                         on_release: self.choose()
-                        size_hint: [.35, None]
+                        size_hint: [.35, 1]
 
-                StartButton:
-                    id: btn_start
-                    on_release: self.run()
-                    text: _('Start')
+                BoxMarginLayout:
+                    orientation: 'horizontal'
+                    StartButton:
+                        id: btn_start
+                        margin: 5
+                        size_hint: [1, 1]
+                        on_release: self.run()
+                        text: _('Start')
         BoxLayout:
             orientation: 'vertical'
 
