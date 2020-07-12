@@ -4,6 +4,7 @@ CURRENT_DIR = Path('.').resolve()
 DIR_3D_PI = CURRENT_DIR / '3d-photo-inpainting'
 CONFIG_ORIGIN = DIR_3D_PI / 'argument.yml'
 CONFIG_CUSTOM = CURRENT_DIR / 'custom-conf.yml'
+LOCALE_DIR = CURRENT_DIR / 'locale'
 MODELS_DIR = CURRENT_DIR / 'models'
 MODELS_URL_ROOT = 'https://filebox.ece.vt.edu/~jbhuang/project/3DPhoto/model'
 MODELS = {

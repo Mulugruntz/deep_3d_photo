@@ -4,6 +4,7 @@ from pathlib import Path
 from kivy.properties import ListProperty, ObjectProperty, DictProperty
 from kivy.uix.button import Button
 from plyer import filechooser
+from kv_classes.localization import _
 
 
 class FileChoose(Button):
@@ -13,7 +14,7 @@ class FileChoose(Button):
     '''
 
     selection = ListProperty([])
-    filetype = DictProperty({"title": "Pick a file...", "filters": []})
+    filetype = DictProperty({"title": _("Pick a file..."), "filters": []})
     bnd_text_input = ObjectProperty(None)
     bnd_image = ObjectProperty(None)
 
@@ -25,10 +26,10 @@ class FileChoose(Button):
         is_valid_path = Path(path := os.path.dirname(path)).exists() and bool(path)
         properties = dict(
             on_selection=self.handle_selection,
-            title="Pick a JPG file..",
+            title=_("Pick a JPG file.."),
             multiple=False,
             path=path if is_valid_path else os.path.expanduser("~"),
-            filters=[("Image file (jpg)", "*.jpg")]
+            filters=[(_("Image file (jpg)"), "*.jpg")]
         )
         properties.update(self.filetype)
         filechooser.open_file(**properties)

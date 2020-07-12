@@ -1,7 +1,7 @@
 from __future__ import annotations
+
 import shutil
 from datetime import datetime
-from functools import partial
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -10,7 +10,7 @@ import os
 
 import vispy
 from imageio.core import Array
-from kivy.clock import Clock
+from kivy.clock import Clock, mainthread
 from tqdm import tqdm
 import yaml
 
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from kv_classes import FileChoose
 from kv_classes.complex_progress_bar import ComplexProgressBar
 from mesh import write_ply, read_ply, output_3d_photo
-from utilities import schedule_interval, check_models_existence
+from utilities import schedule_interval, check_models_existence, f
 from utils import get_MiDaS_samples, read_MiDaS_depth
 import torch
 import cv2
@@ -32,6 +32,7 @@ from MiDaS.run import run_depth
 from MiDaS.monodepth_net import MonoDepthNet
 import MiDaS.MiDaS_utils as MiDaS_utils
 from bilateral_filtering import sparse_bilateral_filtering
+from kv_classes.localization import _
 
 
 def init_fs(config):
@@ -52,7 +53,7 @@ def wrap_3d_pi_with_override(image_filename: Path, *,
     bar_current.reset()
     real_image_filename = image_filename.resolve()
     if not real_image_filename.is_file():
-        raise ValueError(f'File {real_image_filename} does not exist!')
+        raise ValueError(f(_('File {real_image_filename} does not exist!')))
 
     chunk, ext = os.path.splitext(real_image_filename)
     dirname, filename = os.path.split(chunk)
@@ -66,7 +67,6 @@ def wrap_3d_pi_with_override(image_filename: Path, *,
     config['src_folder'] = dirname
     config['specific'] = filename
     config['img_format'] = ext
-    config['gpu_ids'] = 'cpu'
     for name, filename in MODELS.items():
         config[name] = str(MODELS_DIR / filename)
 
@@ -80,16 +80,11 @@ def wrap_3d_pi_with_override(image_filename: Path, *,
         to_file = Path(config['depth_folder'], from_file.parts[-1].rsplit('.', maxsplit=1)[0] + '.png')
 
         if from_file.samefile(to_file):
-            print(f'Depth file {from_file} is already in the correct location. No copy needed.')
+            print(f(_('Depth file {from_file} is already in the correct location. No copy needed.')))
         else:
-            print(f'Copying Depth file from {from_file} to {to_file}')
+            print(f(_('Copying Depth file from {from_file} to {to_file}')))
             shutil.copy(str(from_file), str(to_file))
-            Clock.schedule_once(
-                partial(update_image_handler,
-                        image_handler=depth_handler,
-                        path=to_file,
-                        )
-            )
+            update_image_handler(image_handler=depth_handler, path=to_file)
 
         inject_write_videofile(
             num_videos=len(config['video_postfix']) * number_input_image,
@@ -109,7 +104,7 @@ def wrap_3d_pi_with_override(image_filename: Path, *,
             just_depth=just_depth
         )
     else:
-        raise ValueError("Models have not been downloaded!")
+        raise ValueError(_("Models have not been downloaded!"))
 
 
 def wrap_3d_photo_inpainting(config_path, *,
@@ -134,27 +129,23 @@ def wrap_3d_photo_inpainting(config_path, *,
     bar_current.add(bar_current.max)
     bar_total.add(bar_total.max * 2 / 100)
 
-    print(f"running on device {device}")
+    print(f(_("running on device {device}")))
 
     for idx in tqdm(range(len(sample_list))):
         bar_current.reset()
         depth = None
         sample = sample_list[idx]
-        print("Current Source ==> ", sample['src_pair_name'])
+        print(f(_("Current Source ==> {sample['src_pair_name']}")))
         mesh_fi = os.path.join(config['mesh_folder'], sample['src_pair_name'] +'.ply')
         image = imageio.imread(sample['ref_img_fi'])
 
-        print(f"Running depth extraction at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")
+        print(f(_("Running depth extraction at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")))
         if just_depth or config['require_midas'] is True:
             run_depth([sample['ref_img_fi']], config['src_folder'], config['depth_folder'],
                       config['MiDaS_model_ckpt'], MonoDepthNet, MiDaS_utils, target_w=640)
 
-            Clock.schedule_once(
-                partial(update_image_handler,
-                        image_handler=depth_handler,
-                        path=Path(f"{config['depth_folder']}/{sample['src_pair_name']}.png"),
-                        )
-            )
+            update_image_handler(image_handler=depth_handler,
+                                 path=Path(f"{config['depth_folder']}/{sample['src_pair_name']}.png"))
 
         if just_depth:
             bar_total.reset()
@@ -189,7 +180,7 @@ def wrap_3d_photo_inpainting(config_path, *,
             depth = vis_depths[-1]
             model = None
             torch.cuda.empty_cache()
-            print("Start Running 3D_Photo ...")
+            print(_("Start Running 3D_Photo ..."))
 
             depth_edge_model = load_edge_model(device=device, depth_edge_model_ckpt=config['depth_edge_model_ckpt'])
             depth_edge_model.eval()
@@ -206,7 +197,7 @@ def wrap_3d_photo_inpainting(config_path, *,
             # increase the bars every 5 sec, up to 5 min
             event = schedule_interval(up_bars, 5, 60 * 5)
 
-            print(f"Writing depth ply (and basically doing everything) at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")
+            print(f(_("Writing depth ply (and basically doing everything) at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")))
             rt_info = write_ply(image,
                                   depth,
                                   sample['int_mtx'],
@@ -242,7 +233,8 @@ def wrap_3d_photo_inpainting(config_path, *,
         bar_total.value_normalized = 1
 
 
-def update_image_handler(dt, *, image_handler: FileChoose, path: Path):
+@mainthread
+def update_image_handler(*, image_handler: FileChoose, path: Path):
     path = path.resolve()
     image_handler.bnd_image.set_source(path)
     image_handler.bnd_text_input.text = str(path)
@@ -266,7 +258,7 @@ def prepare_config_and_image(config: Dict, sample: Dict, image: Array) -> Array:
 
 
 def load_edge_model(device: str, depth_edge_model_ckpt: str) -> Inpaint_Edge_Net:
-    print(f"Loading edge model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")
+    print(f(_("Loading edge model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")))
     depth_edge_model = Inpaint_Edge_Net(init_weights=True)
     depth_edge_weight = torch.load(depth_edge_model_ckpt, map_location=torch.device(device))
     depth_edge_model.load_state_dict(depth_edge_weight)
@@ -274,7 +266,7 @@ def load_edge_model(device: str, depth_edge_model_ckpt: str) -> Inpaint_Edge_Net
 
 
 def load_depth_model(device: str, depth_feat_model_ckpt: str) -> Inpaint_Depth_Net:
-    print(f"Loading depth model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")
+    print(f(_("Loading depth model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")))
     depth_feat_model = Inpaint_Depth_Net()
     depth_feat_weight = torch.load(depth_feat_model_ckpt, map_location=torch.device(device))
     depth_feat_model.load_state_dict(depth_feat_weight, strict=True)
@@ -284,7 +276,7 @@ def load_depth_model(device: str, depth_feat_model_ckpt: str) -> Inpaint_Depth_N
 
 
 def load_rgb_model(device: str, rgb_feat_model_ckpt: str) -> Inpaint_Color_Net:
-    print(f"Loading rgb model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")
+    print(f(_("Loading rgb model at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")))
     rgb_model = Inpaint_Color_Net()
     rgb_feat_weight = torch.load(rgb_feat_model_ckpt, map_location=torch.device(device))
     rgb_model.load_state_dict(rgb_feat_weight)
@@ -299,7 +291,7 @@ def make_video(sample, config, props, depth, normal_canvas, all_canvas):
 
     verts, colors, faces, Height, Width, hFov, vFov = props
 
-    print(f"Making video at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")
+    print(f(_("Making video at {datetime.now():%Y-%m-%d %H:%M:%S.%f}")))
     videos_poses, video_basename = copy.deepcopy(sample['tgts_poses']), sample['tgt_name']
     top = (config.get('original_h') // 2 - sample['int_mtx'][1, 2] * config['output_h'])
     left = (config.get('original_w') // 2 - sample['int_mtx'][0, 2] * config['output_w'])
@@ -316,7 +308,7 @@ def make_video(sample, config, props, depth, normal_canvas, all_canvas):
                                                 normal_canvas=normal_canvas, all_canvas=all_canvas,
                                                 mean_loc_depth=mean_loc_depth)
 
-    print(f"{len(sample['video_postfix'])} videos done in {Path(config['video_folder']).resolve()}")
+    print(f(_("{len(sample['video_postfix'])} videos done in {Path(config['video_folder']).resolve()}")))
 
 
 if __name__ == '__main__':

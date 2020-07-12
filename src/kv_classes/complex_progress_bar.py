@@ -7,31 +7,35 @@ from kivy.clock import mainthread
 from kivy.uix.label import Label
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.stacklayout import StackLayout
+from kv_classes.localization import _
+from utilities import f
 
 
 T = TypeVar('T')
 
 
 def call_function_get_frame(func, *args, **kwargs):
-  """
+    """
   Calls the function *func* with the specified arguments and keyword
   arguments and snatches its local frame before it actually executes.
   """
 
-  frame = None
-  trace = sys.gettrace()
-  def snatch_locals(_frame, name, arg):
-    nonlocal frame
-    if frame is None and name == 'call':
-      frame = _frame
-      sys.settrace(trace)
-    return trace
-  sys.settrace(snatch_locals)
-  try:
-    result = func(*args, **kwargs)
-  finally:
-    sys.settrace(trace)
-  return frame, result
+    frame = None
+    trace = sys.gettrace()
+
+    def snatch_locals(_frame, name, arg):
+        nonlocal frame
+        if frame is None and name == 'call':
+            frame = _frame
+            sys.settrace(trace)
+        return trace
+
+    sys.settrace(snatch_locals)
+    try:
+        result = func(*args, **kwargs)
+    finally:
+        sys.settrace(trace)
+    return frame, result
 
 
 class ComplexProgressBar(StackLayout):
@@ -46,7 +50,7 @@ class ComplexProgressBar(StackLayout):
             if isinstance(child, type_):
                 return child
         else:
-            raise AttributeError(f"The {self.__class__} has no {type_} child!")
+            raise AttributeError(f(_("The {self.__class__} has no {type_} child!")))
 
     @property
     def label(self) -> Label:

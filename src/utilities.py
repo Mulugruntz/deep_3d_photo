@@ -1,12 +1,24 @@
+from __future__ import annotations
 import os
 from pathlib import Path
 from typing import List, Optional, Callable
+from inspect import currentframe
 
 import requests
 from kivy.clock import Clock
 
-from kv_classes import ComplexProgressBar
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from kv_classes import ComplexProgressBar
 from constants import MODELS_DIR, MODELS_URL_ROOT, MODELS
+
+
+from kv_classes.localization import _
+
+
+def f(s):
+    frame = currentframe().f_back
+    return eval(f"""f'''{s}'''""", frame.f_locals, frame.f_globals)
 
 
 def sizeof_fmt(num, suffix='B'):
@@ -25,7 +37,7 @@ def download_models(models: List, *,
     to_download = []
     for model in models:
         if model not in MODELS:
-            raise ValueError(f"Unknown model {model}!")
+            raise ValueError(f(_("Unknown model {model}!")))
         remote_url = f'{MODELS_URL_ROOT}/{MODELS[model]}'
         local_path = MODELS_DIR / MODELS[model]
         to_download.append((remote_url, local_path))
@@ -106,12 +118,12 @@ def check_models_existence() -> List:
         local_size = (MODELS_DIR / filename).lstat().st_size
         if remote_size != local_size:
             missing.append(name)
-            print(f'File {MODELS[name]} is incorrect (remote: {remote_size} != local: {local_size}). Will re-download.')
+            print(f(_('File {MODELS[name]} is incorrect (remote: {remote_size} != local: {local_size}). Will re-download.')))
 
     if missing:
-        print(f'The following models are missing: {", ".join(MODELS[m] for m in missing)}! Please download them first.')
-        print('You can find them there:')
+        print(f(_('The following models are missing: {", ".join(MODELS[m] for m in missing)}! Please download them first.')))
+        print(_('You can find them there:'))
         print(*[f'{MODELS_URL_ROOT}/{MODELS[m]}' for m in missing], sep='\n')
-        print(f'Please put them in {MODELS_DIR}')
+        print(f(_('Please put them in {MODELS_DIR}')))
 
     return missing

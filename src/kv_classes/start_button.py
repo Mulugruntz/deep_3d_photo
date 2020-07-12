@@ -16,12 +16,20 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from kv_classes import ComplexProgressBar, FileChoose
 
-START_DOWNLOAD = 'Download models (required first time)'
-START_DOWNLOADING = 'Downloading models...'
-START_DEEP = 'Start'
-START_DEEPING = 'Working, please wait...'
-START_DEPTH = 'Generate Depth file'
-START_DEPTHING = 'Generating Depth file...'
+from kv_classes.localization import _
+
+
+START_DOWNLOAD = _('Download models (required first time)')
+START_DOWNLOADING = _('Downloading models...')
+START_DEEP = _('Start')
+START_DEEPING = _('Working, please wait...')
+START_DEPTH = _('Generate Depth file')
+START_DEPTHING = _('Generating Depth file...')
+
+
+class TranslatedStr(str):
+    def __eq__(self, other):
+        return super(TranslatedStr, self).__eq__(_(other))
 
 
 class StartButton(Button):
@@ -31,29 +39,37 @@ class StartButton(Button):
     bar_total: ComplexProgressBar = ObjectProperty(None)
     bar_current: ComplexProgressBar = ObjectProperty(None)
 
+    @property
+    def tr_text(self):
+        return TranslatedStr(self.text)
+
+    @tr_text.setter
+    def tr_text(self, value):
+        self.text = _(value)
+
     def run(self):
         self.revalidate()
         if self.disabled:
             return
         self.set_disabled(True)
-        if self.text == START_DOWNLOAD:
-            self.text = START_DOWNLOADING
+        if self.tr_text == START_DOWNLOAD:
+            self.tr_text = START_DOWNLOADING
             t = threading.Thread(target=self.download_thread, args=())
             t.daemon = True
             t.start()
-        elif self.text == START_DEEP:
-            self.text = START_DEEPING
+        elif self.tr_text == START_DEEP:
+            self.tr_text = START_DEEPING
             t = threading.Thread(target=self.deep_thread, args=())
             t.daemon = True
             t.start()
-        elif self.text == START_DEPTH:
-            self.text = START_DEPTHING
+        elif self.tr_text == START_DEPTH:
+            self.tr_text = START_DEPTHING
             t = threading.Thread(target=self.depth_thread, args=())
             t.daemon = True
             t.start()
 
     def depth_thread(self):
-        print('Will generate the depth...')
+        print(_('Will generate the depth...'))
         try:
             wrap_3d_pi_with_override(
                 Path(self.image_handler.bnd_image.source),
@@ -67,15 +83,15 @@ class StartButton(Button):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_traceback,
                                       file=sys.stdout)
-            print('Done working: failure!')
+            print(_('Done working: failure!'))
         else:
-            print('Done working: success!')
-        self.text = START_DEPTH
+            print(_('Done working: success!'))
+        self.tr_text = START_DEPTH
         self.revalidate()
         # self.set_disabled(False)
 
     def deep_thread(self):
-        print('Will start working...')
+        print(_('Will start working...'))
         try:
             wrap_3d_pi_with_override(
                 Path(self.image_handler.bnd_image.source),
@@ -89,14 +105,14 @@ class StartButton(Button):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_traceback,
                                       file=sys.stdout)
-            print('Done working: failure!')
+            print(_('Done working: failure!'))
         else:
-            print('Done working: success!')
-        self.text = START_DEEP
+            print(_('Done working: success!'))
+        self.tr_text = START_DEEP
         self.revalidate()
 
     def download_thread(self):
-        print('Will start downloading the models...')
+        print(_('Will start downloading the models...'))
         try:
             download_models(
                 self.missing_models,
@@ -109,9 +125,9 @@ class StartButton(Button):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_traceback,
                                       file=sys.stdout)
-            print('Model download: Done (failure).')
+            print(_('Model download: Done (failure).'))
         else:
-            print('Model download: Done (success).')
+            print(_('Model download: Done (success).'))
 
         self.revalidate()
 
@@ -121,11 +137,11 @@ class StartButton(Button):
 
     @mainthread
     def revalidate(self):
-        if self.text in [START_DOWNLOADING, START_DEPTHING, START_DEEPING]:
+        if self.tr_text in [START_DOWNLOADING, START_DEPTHING, START_DEEPING]:
             self.set_disabled(True)
         elif self.missing_models:
-            self.text = START_DOWNLOAD
+            self.tr_text = START_DOWNLOAD
             self.set_disabled(False)
         else:
             self.set_disabled(self.image_handler.bnd_image.is_default())
-            self.text = START_DEPTH if self.depth_handler.bnd_image.is_default() else START_DEEP
+            self.tr_text = START_DEPTH if self.depth_handler.bnd_image.is_default() else START_DEEP

@@ -5,8 +5,11 @@ from pathlib import Path
 
 from kivy.clock import Clock
 from kivy.app import App
+from kivy.properties import StringProperty
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
+
+from kv_classes.localization import _, change_language_to, current_language, list_languages
 
 sys.path.insert(0, str(Path(sys.base_prefix, 'src')))
 sys.path.insert(0, str(Path(sys.base_prefix, '3d-photo-inpainting')))
@@ -73,39 +76,41 @@ class MyLabelHandler(logging.Handler):
             self.emit = self.new_emit
 
     def new_emit(self, record):
-        def f(dt=None):
+        def func(dt=None):
             self.callback(self.format(record) + '\n')
 
-        Clock.schedule_once(f)
+        Clock.schedule_once(func)
 
 
 class Deep3DPhotoWidget(Widget):
     def __init__(self, **kwargs):
         super(Deep3DPhotoWidget, self).__init__(**kwargs)
-        # self.ids.btn_load.bind(on_press=self.cb_btn_load_on_press)
 
-    # def cb_btn_load_on_press(self, event: MotionEvent) -> None:
-    #     path = filechooser.open_file(title="Pick a JPG file..",
-    #                              filters=[("Image file (jpg)", "*.jpg")])
-    #     print(path)
+
+print(list_languages())
+print(current_language())
+change_language_to("fr")
+print(current_language())
 
 
 class Deep3DPhotoApp(App):
-    # def on_stop(self):
-    #     self.root.ids.btn_start.stop.set()
+    lang = StringProperty('fr')
+
+    def on_lang(self, instance, lang):
+        change_language_to(lang)
 
     def build(self):
-        log = logging.getLogger()
-        log.level = logging.DEBUG
-        log.addHandler(MyLabelHandler(lambda: App.get_running_app().root.ids.scrlv.append_message, logging.DEBUG))
         return Deep3DPhotoWidget()
 
     def on_start(self, **kwargs):
+        log = logging.getLogger()
+        log.level = logging.DEBUG
+        log.addHandler(MyLabelHandler(lambda: App.get_running_app().root.ids.scrlv.append_message, logging.DEBUG))
         missing_models = check_models_existence()
         btn_start = self.root.ids.btn_start
         if missing_models:
             btn_start.missing_models = missing_models
-            btn_start.text = START_DOWNLOAD
+            btn_start.tr_text = START_DOWNLOAD
 
         btn_start.image_handler = self.root.ids.btn_image_load
         btn_start.depth_handler = self.root.ids.btn_depth_load

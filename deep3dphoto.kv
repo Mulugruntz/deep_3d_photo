@@ -1,5 +1,6 @@
 # kivy 2.0
 #:import Path pathlib.Path
+#:import _ kv_classes.localization._
 <FileChoose>:
 
 <ValidatedImage>:
@@ -36,8 +37,8 @@
                 ComplexProgressBar:
                     id: pb_total
                     Label:
-                        internal_name: 'Total'
-                        text: 'Total'
+                        internal_name: _('Total')
+                        text: _('Total')
                         color: .2,.2,.2,1
                         size_hint: [.35, 1]
                     ProgressBar:
@@ -48,8 +49,8 @@
                 ComplexProgressBar:
                     id: pb_current
                     Label:
-                        internal_name: 'Current'
-                        text: 'Current'
+                        internal_name: _('Current')
+                        text: _('Current')
                         color: .2,.2,.2,1
                         size_hint: [.35, 1]
                     ProgressBar:
@@ -63,15 +64,15 @@
                         id: input_load
                         multiline: False
                         text: ''
-                        hint_text: 'selected image path'
+                        hint_text: _('selected image path')
                         size_hint: [.65, None]
                         on_text_validate: image_client.set_source(Path(self.text))
                     FileChoose:
                         id: btn_image_load
                         bnd_text_input: input_load
                         bnd_image: image_client
-                        filetype: {"title": "Pick a JPG file...", "filters": [("Image file (jpg)", "*.jpg")]}
-                        text: 'Load image'
+                        filetype: {"title": _("Pick a JPG file..."), "filters": [(_("Image file (jpg)"), "*.jpg")]}
+                        text: _('Load image')
                         on_release: self.choose()
                         size_hint: [.35, None]
 
@@ -81,22 +82,22 @@
                         id: depth_load
                         multiline: False
                         text: ''
-                        hint_text: 'selected depth path'
+                        hint_text: _('selected depth path')
                         size_hint: [.65, None]
                         on_text_validate: image_depth.set_source(Path(self.text))
                     FileChoose:
                         id: btn_depth_load
                         bnd_text_input: depth_load
                         bnd_image: image_depth
-                        filetype: {"title": "Pick a PNG file...", "filters": [("Image file (png)", "*.png")]}
-                        text: 'Load depth'
+                        filetype: {"title": _("Pick a PNG file..."), "filters": [(_("Image file (png)"), "*.png")]}
+                        text: _('Load depth')
                         on_release: self.choose()
                         size_hint: [.35, None]
 
                 StartButton:
                     id: btn_start
                     on_release: self.run()
-                    text: 'Start'
+                    text: _('Start')
         BoxLayout:
             orientation: 'vertical'
 
@@ -118,5 +119,4 @@
                     multiline: True
                     size_hint: [1, None]
                     disabled: True
-#                    text: '\n'.join(['lorem ipsum ' * 50] * 5)
                     height: max(self.minimum_height, scrlv.height)
