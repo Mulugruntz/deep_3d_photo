@@ -6,9 +6,15 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-torch = "==1.5.1"
-torchvision = "==0.6.1"
-vispy = "==0.6.4"
+torch = {file = "https://download.pytorch.org/whl/cu102/torch-1.5.1-cp38-cp38-win_amd64.whl"}
+#torch_win = {file = "https://download.pytorch.org/whl/cu102/torch-1.5.1-cp38-cp38-win_amd64.whl", sys_platform = "== 'win32'"}
+#torch_darwin = {file = "https://download.pytorch.org/whl/cpu/torch-1.5.1-cp38-none-macosx_10_9_x86_64.whl", sys_platform = "== 'darwin'"}
+torchvision = {file = "https://download.pytorch.org/whl/cu102/torchvision-0.6.1-cp38-cp38-win_amd64.whl"}
+#torchvision_win = {file = "https://download.pytorch.org/whl/cu102/torchvision-0.6.1-cp38-cp38-win_amd64.whl", sys_platform = "== 'win32'"}
+#torchvision_darwin = {file = "https://download.pytorch.org/whl/torchvision-0.6.1-cp38-cp38-macosx_10_9_x86_64.whl", sys_platform = "== 'darwin'"}
+numpy = "<1.18.3"
+#vispy = {version = "==0.6.4", sys_platform = "!= 'win32'"}
+vispy = {file = "https://download.lfd.uci.edu/pythonlibs/w3jqiv8s/vispy-0.6.4-cp38-cp38-win_amd64.whl"}
 moviepy = "==1.0.3"
 transforms3d = "==0.3.1"
 networkx = "==2.4"
@@ -18,11 +24,16 @@ matplotlib = "==3.2.2"
 scikit-image = "==0.17.2"
 pyqt5 = "==5.15.0"
 opencv-python-headless = "==4.2.0.34"
-kivy = {path = "./vendors/Kivy-2.0.0rc2-cp38-cp38-macosx_10_13_x86_64.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"}
-plyer = {editable = true,git = "https://github.com/kivy/plyer.git",ref = "f12b2f58acd498f7aa523c57c46ddb115810a72f"}
+kivy_darwin = {path = "./vendors/Kivy-2.0.0rc2-cp38-cp38-macosx_10_13_x86_64.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", sys_platform = "== 'darwin'"}
+kivy_win = {path = "./vendors/Kivy-2.0.0rc3-cp38-cp38-win_amd64.whl", sys_platform = "== 'win32'"}
+plyer = {git = "https://github.com/kivy/plyer.git", ref = "f12b2f58acd498f7aa523c57c46ddb115810a72f", editable=true}
 cython = "==0.29.20"
-pyobjus = {editable = true,git = "https://github.com/kivy/pyobjus.git",ref = "672ed61"}
-pyinstaller = "==3.6"
+"kivy.deps.sdl2" = "==0.2.0"
+"kivy.deps.glew" = "==0.2.0"
+"kivy.deps.gstreamer" = "==0.2.0"
+"kivy.deps.angle" = "==0.2.0"
+pypiwin32 = {version = "==223", sys_platform = "== 'win32'"}
+pipenv = "==2020.6.2"
 
 [requires]
 python_version = "3.8"

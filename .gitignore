@@ -136,3 +136,5 @@ custom-conf.yml
 
 # build/dist
 Deep3DPhotoApp
+winbuild
+windist

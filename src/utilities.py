@@ -18,7 +18,7 @@ from kv_classes.localization import _
 
 def f(s):
     frame = currentframe().f_back
-    return eval(f"""f'''{s}'''""", frame.f_locals, frame.f_globals)
+    return eval(f"""f'''{s}'''""", frame.f_globals, frame.f_locals)
 
 
 def sizeof_fmt(num, suffix='B'):

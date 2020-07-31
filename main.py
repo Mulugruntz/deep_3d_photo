@@ -1,4 +1,5 @@
 import logging
+import os.path
 import sys
 from contextlib import redirect_stdout, redirect_stderr
 from pathlib import Path
@@ -9,10 +10,12 @@ from kivy.properties import StringProperty
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
-from kv_classes.localization import _, change_language_to, current_language, list_languages
+CURRENT = Path(os.path.dirname(Path(__file__).resolve()))
 
-sys.path.insert(0, str(Path(sys.base_prefix, 'src')))
-sys.path.insert(0, str(Path(sys.base_prefix, '3d-photo-inpainting')))
+#sys.path.insert(0, str(Path(sys.base_prefix, '3d-photo-inpainting')))
+#sys.path.insert(0, str(Path(sys.base_prefix, 'src')))
+sys.path.insert(0, str(CURRENT / '3d-photo-inpainting'))
+sys.path.insert(0, str(CURRENT / 'src'))
 
 
 print(sys.path)
@@ -22,6 +25,7 @@ print(sys.base_prefix)
 
 
 from kv_classes import ComplexProgressBar, StartButton, AutoScrollView, FileChoose
+from kv_classes.localization import _, change_language_to, current_language, list_languages
 from kv_classes.start_button import START_DOWNLOAD
 from utilities import check_models_existence
 
@@ -121,10 +125,10 @@ class Deep3DPhotoApp(App):
 
 
 def main():
-    with redirect_stdout(KivyTextOut(delayed_callback=lambda: App.get_running_app().root.ids.scrlv.append_message)), \
-         redirect_stderr(
-             KivyTextOut(delayed_callback=lambda: App.get_running_app().root.ids.scrlv.append_message, std=sys.stderr)):
-
+    #with redirect_stdout(KivyTextOut(delayed_callback=lambda: App.get_running_app().root.ids.scrlv.append_message)), \
+    #     redirect_stderr(
+    #         KivyTextOut(delayed_callback=lambda: App.get_running_app().root.ids.scrlv.append_message, std=sys.stderr)):
+    with redirect_stdout(KivyTextOut(delayed_callback=lambda: App.get_running_app().root.ids.scrlv.append_message)):
         Deep3DPhotoApp().run()
 
 
