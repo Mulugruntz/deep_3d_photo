@@ -1,12 +1,10 @@
 SET build_tools=%~dp0
 SET build_tools=%build_tools:~0,-1%
 SET winbuild=%build_tools%\..\winbuild
-SET windist=%build_tools%\..\windist
 
 if exist "%winbuild%" rmdir /s /q "%winbuild%"
 mkdir "%winbuild%\deep_3d_photo"
 mkdir "%winbuild%\venv"
-if not exist "%windist%" mkdir "%windist%"
 
 cd "%winbuild%\venv"
 SET PIPENV_VENV_IN_PROJECT=1
