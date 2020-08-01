@@ -69,18 +69,18 @@ def download_file(remote_url, local_path: Path, *,
         file_size = int(r.headers.get('Content-Length', 0))
         filename = local_path.name
         if bar_current is not None:
-            bar_current.reset()
+            bar_current.value = 0
             bar_current.max = file_size
             bar_current.text = lambda *, internal_name, max_: f"{internal_name}: {filename} \n 0 / {sizeof_fmt(max_)}"
 
         current_placeholder = lambda *, internal_name, max_, value: (
             f"{internal_name}:\n"
             f"{filename}\n"
-            f"{sizeof_fmt(value)} / {max_}"
+            f"{sizeof_fmt(value)} / {sizeof_fmt(max_)}"
         )
         total_placeholder = lambda *, internal_name, max_, value: (
             f"{internal_name}\n"
-            f"{sizeof_fmt(value)} / {max_}"
+            f"{sizeof_fmt(value)} / {sizeof_fmt(max_)}"
         )
 
         with open(local_path, 'wb') as f:

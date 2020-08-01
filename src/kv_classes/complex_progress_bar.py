@@ -95,7 +95,6 @@ class ComplexProgressBar(StackLayout):
     def text(self):
         return self.label.text
 
-    @mainthread
     def reset(self):
         self.pb.value = 0
         self.max = 100
