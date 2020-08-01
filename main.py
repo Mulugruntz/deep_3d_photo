@@ -4,13 +4,20 @@ import sys
 from contextlib import redirect_stdout, redirect_stderr
 from pathlib import Path
 
+CURRENT = Path(os.path.dirname(Path(__file__).resolve()))
+FAVICON = str(CURRENT / 'res' / 'deep3dphoto-256.png')
+
+from kivy.config import Config
+
+Config.set('kivy', 'window_icon', FAVICON)
+
 from kivy.clock import Clock
 from kivy.app import App
 from kivy.properties import StringProperty
 from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
-CURRENT = Path(os.path.dirname(Path(__file__).resolve()))
+
 
 #sys.path.insert(0, str(Path(sys.base_prefix, '3d-photo-inpainting')))
 #sys.path.insert(0, str(Path(sys.base_prefix, 'src')))
@@ -104,6 +111,7 @@ class Deep3DPhotoApp(App):
         change_language_to(lang)
 
     def build(self):
+        self.icon = FAVICON
         return Deep3DPhotoWidget()
 
     def on_start(self, **kwargs):

@@ -25,7 +25,7 @@ LicenseFile=D:\Deep3DPhoto\deep_3d_photo\winbuild\deep_3d_photo\LICENSE
 PrivilegesRequired=lowest
 OutputDir=D:\Deep3DPhoto\deep_3d_photo\windist
 OutputBaseFilename=Install Deep3DPhoto
-SetupIconFile=D:\Deep3DPhoto\deep_3d_photo\winbuild\deep_3d_photo\deep3dphoto.ico
+SetupIconFile=D:\Deep3DPhoto\deep_3d_photo\winbuild\deep_3d_photo\res\deep3dphoto.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -43,8 +43,8 @@ Source: "D:\Deep3DPhoto\deep_3d_photo\winbuild\*"; DestDir: "{app}"; Flags: igno
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\deep_3d_photo\deep3dphoto.ico"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\deep_3d_photo\deep3dphoto.ico"
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\deep_3d_photo\res\deep3dphoto.ico"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\deep_3d_photo\res\deep3dphoto.ico"
 
 [Run]
 Filename: "{cmd}"; Parameters: "/C set PIPENV_INSTALL_TIMEOUT=7200 & SET PIPENV_VENV_IN_PROJECT=1 & ""{app}\deep_3d_photo\bootstrap\Scripts\python.exe"" -m pipenv install"; WorkingDir: "{app}\deep_3d_photo"; StatusMsg: "Installing Python dependencies... (may take several minutes)"   ; Flags: runminimized
