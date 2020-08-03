@@ -26,7 +26,7 @@ PrivilegesRequired=lowest
 OutputDir=D:\Deep3DPhoto\deep_3d_photo\windist
 OutputBaseFilename=Install Deep3DPhoto
 SetupIconFile=D:\Deep3DPhoto\deep_3d_photo\winbuild\deep_3d_photo\res\deep3dphoto.ico
-Compression=lzma
+Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
 
@@ -47,7 +47,7 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFile
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\deep_3d_photo\res\deep3dphoto.ico"
 
 [Run]
-Filename: "{cmd}"; Parameters: "/C set PIPENV_INSTALL_TIMEOUT=7200 & SET PIPENV_VENV_IN_PROJECT=1 & ""{app}\deep_3d_photo\bootstrap\Scripts\python.exe"" -m pipenv install"; WorkingDir: "{app}\deep_3d_photo"; StatusMsg: "Installing Python dependencies... (may take several minutes)"   ; Flags: runminimized
+Filename: "{cmd}"; Parameters: "/C set PIPENV_INSTALL_TIMEOUT=7200 & SET PIPENV_VENV_IN_PROJECT=1 & ""{app}\deep_3d_photo\python38\python.exe"" -m pipenv install"; WorkingDir: "{app}\deep_3d_photo"; StatusMsg: "Installing Python dependencies... (may take several minutes)"   ; Flags: runminimized
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
 
 [UninstallDelete]

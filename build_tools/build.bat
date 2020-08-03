@@ -4,19 +4,43 @@ SET winbuild=%build_tools%\..\winbuild
 
 if exist "%winbuild%" rmdir /s /q "%winbuild%"
 mkdir "%winbuild%\deep_3d_photo"
-mkdir "%winbuild%\venv"
-
-cd "%winbuild%\venv"
-SET PIPENV_VENV_IN_PROJECT=1
-SET PIPENV_NO_INHERIT=1
-python -m pipenv install --site-packages --python 3.8 --skip-lock
-python -m pipenv install pipenv --skip-lock
 
 cd "%winbuild%"
 git clone --recurse-submodules --depth 1 --shallow-submodules https://github.com/Mulugruntz/deep_3d_photo.git -b windows_build "%winbuild%\deep_3d_photo"
 
-move "%winbuild%\venv\.venv" "%winbuild%\deep_3d_photo\bootstrap"
-rmdir /s /q "%winbuild%\venv"
+
+SET COMMAND=dir /b /s "%build_tools%\Winpython*.exe"
+FOR /F "delims=" %%A IN ('%COMMAND%') DO (
+    SET WPYTHON_EXE=%%A
+    GOTO :Out
+)
+
+:Out
+
+"%WPYTHON_EXE%" -y -o"%winbuild%\wpython"
+
+setlocal EnableDelayedExpansion
+set multiLine=from pathlib import Path ^
+
+import shutil ^
+
+source = str(next(next((Path(r'%winbuild%').resolve() / 'wpython').glob(r'WPy*')).glob(r'python*'))) ^
+
+dest = str(Path(r'%winbuild%').resolve() / 'deep_3d_photo' / 'python38') ^
+
+print(f'''Moving '{source}' to '{dest}' ''')  ^
+
+shutil.move(source, dest) ^
+
+shutil.rmtree(Path(r'%winbuild%').resolve() / 'wpython')
+
+echo !multiLine!
+
+python -c "!multiLine!"
+
+"%winbuild%\deep_3d_photo\python38\python.exe" -m pip install --upgrade pip
+"%winbuild%\deep_3d_photo\python38\python.exe" -m pip install pipenv
+
 xcopy "%build_tools%\START.bat" "%winbuild%"
 rmdir /s /q "%winbuild%\deep_3d_photo\.git"
 rmdir /s /q "%winbuild%\deep_3d_photo\build_tools"

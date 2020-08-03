@@ -15,7 +15,7 @@ Just run the `build_tools\build.bat` script. What it does:
 
 * Creates folder `winbuild`.
 * within `winbuild\deep_3d_photo` gets a git clone of the `windows_build` branch.
-* within `winbuild\deep_3d_photo\bootstrap` a working minimal version of Python 3.8 (virtualenv).
+* within `winbuild\deep_3d_photo\python38` a working minimal version of Python 3.8 (Winpython).
   This will be used to initialize the python environment on the user machine. This is not the environment
   that will end up being used, as they are no relocatable. Instead, a new one will be created at installation
   time, by using the material of that one that comes with `pipenv` installed.
