@@ -1,6 +1,7 @@
 # kivy 2.0
 #:import Path pathlib.Path
 #:import _ kv_classes.localization._
+#:import RESOURCE_DIR constants.RESOURCE_DIR
 <BoxMarginLayout>:
 
 <FileChoose>:
@@ -28,7 +29,7 @@
             ValidatedImage:
                 id: image_client
                 allowed_ext: ['jpg']
-                default_image: 'blank-transparent.png'
+                default_image: str(RESOURCE_DIR / 'blank-transparent.png')
                 size_hint: [1, 1]
                 source: self.default_image
                 allow_stretch: True
@@ -114,7 +115,7 @@
             ValidatedImage:
                 id: image_depth
                 allowed_ext: ['png']
-                default_image: 'blank-transparent.png'
+                default_image: str(RESOURCE_DIR / 'blank-transparent.png')
                 size_hint: [1, 1]
                 source: self.default_image
                 allow_stretch: True

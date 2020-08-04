@@ -14,7 +14,7 @@ from kivy.clock import Clock, mainthread
 from tqdm import tqdm
 import yaml
 
-from constants import CONFIG_ORIGIN, CONFIG_CUSTOM, MODELS_DIR, MODELS
+from constants import CONFIG_ORIGIN, CONFIG_CUSTOM, MODELS_DIR, MODELS, ROOT_INSTALL_DIR
 from injector import inject_write_videofile
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -41,6 +41,10 @@ def init_fs(config):
     os.makedirs(config['depth_folder'], exist_ok=True)
 
 
+def build_path_from_root(path: str) -> Path:
+    return Path(path).resolve() if os.path.isabs(path) else (ROOT_INSTALL_DIR / path).resolve()
+
+
 def wrap_3d_pi_with_override(image_filename: Path, *,
                              depth_handler: Optional[FileChoose] = None,
                              bar_total: Optional[ComplexProgressBar] = None,
@@ -61,12 +65,17 @@ def wrap_3d_pi_with_override(image_filename: Path, *,
     with open(origin_conf, 'r') as config_file:
         config = yaml.load(config_file)
 
-    config['depth_folder'] = str(Path(config['depth_folder']).resolve())
-    config['mesh_folder'] = str(Path(config['mesh_folder']).resolve())
-    config['video_folder'] = str(Path(config['video_folder']).resolve())
+    config['depth_folder'] = str(build_path_from_root(config['depth_folder']))
+    config['mesh_folder'] = str(build_path_from_root(config['mesh_folder']))
+    config['video_folder'] = str(build_path_from_root(config['video_folder']))
     config['src_folder'] = dirname
     config['specific'] = filename
     config['img_format'] = ext
+
+    # By default, we want cpu. User can change it afterwards.
+    if origin_conf == CONFIG_ORIGIN:
+        config['gpu_ids'] = 'cpu'
+
     for name, filename in MODELS.items():
         config[name] = str(MODELS_DIR / filename)
 

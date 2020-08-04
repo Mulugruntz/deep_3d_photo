@@ -1,11 +1,22 @@
-import logging
-import os.path
 import sys
-from contextlib import redirect_stdout, redirect_stderr
 from pathlib import Path
 
-CURRENT = Path(os.path.dirname(Path(__file__).resolve()))
-FAVICON = str(CURRENT / 'res' / 'deep3dphoto-256.png')
+GUESSED_MAIN_DIR = Path(__file__).parent.resolve()
+
+sys.path.insert(0, str(GUESSED_MAIN_DIR / '3d-photo-inpainting'))
+sys.path.insert(0, str(GUESSED_MAIN_DIR / 'src'))
+
+import logging
+from contextlib import redirect_stdout, redirect_stderr
+
+from constants import RESOURCE_DIR, MAIN_DIR
+
+if GUESSED_MAIN_DIR != MAIN_DIR:
+    raise EnvironmentError(
+        f'Something went wrong when initializing the environment! {GUESSED_MAIN_DIR} != {MAIN_DIR}'
+    )
+
+FAVICON = str(RESOURCE_DIR / 'deep3dphoto-256.png')
 
 from kivy.config import Config
 
@@ -18,11 +29,6 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 
 
-
-#sys.path.insert(0, str(Path(sys.base_prefix, '3d-photo-inpainting')))
-#sys.path.insert(0, str(Path(sys.base_prefix, 'src')))
-sys.path.insert(0, str(CURRENT / '3d-photo-inpainting'))
-sys.path.insert(0, str(CURRENT / 'src'))
 
 
 print(sys.path)
