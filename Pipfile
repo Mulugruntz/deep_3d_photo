@@ -26,7 +26,7 @@ pyqt5 = "==5.15.0"
 opencv-python-headless = "==4.2.0.34"
 kivy_darwin = {path = "./vendors/Kivy-2.0.0rc2-cp38-cp38-macosx_10_13_x86_64.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", sys_platform = "== 'darwin'"}
 kivy_win = {path = "./vendors/Kivy-2.0.0rc3-cp38-cp38-win_amd64.whl", sys_platform = "== 'win32'"}
-plyer = {git = "https://github.com/kivy/plyer.git", ref = "f12b2f58acd498f7aa523c57c46ddb115810a72f", editable=true}
+plyer = {editable = true, path = "./vendors/plyer"}
 cython = "==0.29.20"
 "kivy.deps.sdl2" = "==0.2.0"
 "kivy.deps.glew" = "==0.2.0"

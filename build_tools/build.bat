@@ -38,6 +38,18 @@ echo !multiLine!
 
 python -c "!multiLine!"
 
+mkdir "%winbuild%\deep_3d_photo\vendors\plyer"
+pushd "%winbuild%\deep_3d_photo\vendors\plyer"
+git init
+git remote add origin https://github.com/kivy/plyer.git
+git fetch origin f12b2f58acd498f7aa523c57c46ddb115810a72f
+git reset --hard FETCH_HEAD
+rmdir /s /q .git
+rmdir /s /q .github
+del /s .gitignore
+del /s .gitattributes
+popd
+
 "%winbuild%\deep_3d_photo\python38\python.exe" -m pip install --upgrade pip
 "%winbuild%\deep_3d_photo\python38\python.exe" -m pip install pipenv
 
