@@ -1,0 +1,30 @@
+*.pyc
+*.pyo
+.*.swp
+.*.swo
+build
+docs/build/
+dist
+*.egg-info
+venv
+
+*.komodoproject
+.komodotools
+
+# PyDev
+.project
+.pydevproject
+.settings/
+
+bin
+.buildozer
+.idea
+
+# VS Code
+.vscode
+
+# Mac
+*.DS_Store
+
+# Coverage
+.coverage

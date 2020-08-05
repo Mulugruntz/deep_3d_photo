@@ -1,0 +1,32 @@
+#:kivy 1.8.0
+<NotificationDemo>:
+    orientation: 'vertical'
+    Widget:
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, None
+        TextInput:
+            id: notification_title
+            text: 'Put title here'
+            size_hint: 1, None
+        TextInput:
+            id: notification_text
+            text: 'Put message here'
+            size_hint: 1, None
+        TextInput:
+            id: ticker_text
+            text: 'New notification'
+            size_hint: 1, None
+    Button:
+        text: 'Toast Notification'
+        size_hint: 1, None
+        on_release: root.do_notify(mode='toast')
+    Button:
+        text: 'Simple Notification'
+        size_hint: 1, None
+        on_release: root.do_notify(mode='normal')
+    Button:
+        text: 'Fancy Notification'
+        size_hint: 1, None
+        on_release: root.do_notify(mode='fancy')
+    Widget:
